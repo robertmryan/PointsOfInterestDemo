@@ -7,14 +7,32 @@
 //
 
 import UIKit
+import os.log
+
+private let pointsOfInterest = OSLog(subsystem: "PointsOfInterestDemo", category: .pointsOfInterest)
 
 class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        os_signpost(.event, log: pointsOfInterest, name: "viewDidLoad")
     }
 
+    @IBAction func didTapStartRange(_ sender: Any) {
+        let id = OSSignpostID(log: pointsOfInterest)
+        os_signpost(.begin, log: pointsOfInterest, name: "didTapStartRange", signpostID: id)
 
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            os_signpost(.end, log: pointsOfInterest, name: "didTapStartRange", signpostID: id)
+        }
+
+        os_log("didTapStartRange")
+    }
+
+    @IBAction func didTapSignpost(_ sender: Any) {
+        os_signpost(.event, log: pointsOfInterest, name: #function)
+
+        os_log("didTapSignpost")
+    }
 }
 
